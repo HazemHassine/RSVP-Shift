@@ -8,6 +8,9 @@ let savedSelectionRange = null;
 let isStartingDelay = false;
 let startDelayTimerId = null;
 let startDelayAnimationId = null;
+let readingStartTimestamp = null;
+let totalWordsPlanned = 0;
+let summaryTimerId = null;
 
 const START_DELAY_MS = 1000;
 
@@ -27,11 +30,17 @@ overlay.innerHTML = `
 
     <div id="rsvp-start-delay" aria-hidden="true"></div>
 
-  <div id="rsvp-word-display">
-    <span class="rsvp-left"></span>
-    <span class="rsvp-pivot">READY</span>
-    <span class="rsvp-right"></span>
-  </div>
+    <div id="rsvp-line">
+        <div id="rsvp-word-display">
+            <span class="rsvp-left"></span>
+            <span class="rsvp-pivot">READY</span>
+            <span class="rsvp-right"></span>
+        </div>
+
+        <div id="rsvp-preview" aria-hidden="true"></div>
+    </div>
+
+    <div id="rsvp-summary" aria-live="polite"></div>
   
   <div class="rsvp-controls">
     <div class="rsvp-group">
@@ -59,9 +68,12 @@ document.body.appendChild(overlay);
 const progressBar = overlay.querySelector("#rsvp-progress");
 const startDelayIndicator = overlay.querySelector("#rsvp-start-delay");
 const wordDisplay = overlay.querySelector("#rsvp-word-display");
+const previewDisplay = overlay.querySelector("#rsvp-preview");
+const summaryDisplay = overlay.querySelector("#rsvp-summary");
 const leftSpan = overlay.querySelector(".rsvp-left");
 const pivotSpan = overlay.querySelector(".rsvp-pivot");
 const rightSpan = overlay.querySelector(".rsvp-right");
+const controlsBar = overlay.querySelector(".rsvp-controls");
 
 const wpmInput = overlay.querySelector("#rsvp-wpm");
 const colorInput = overlay.querySelector("#rsvp-color");
@@ -116,10 +128,54 @@ function renderSplitWord(word) {
     rightSpan.innerText = rightCore + suffix;
 }
 
+function updatePreview() {
+    if (!wordQueue.length || currentWordIndex >= wordQueue.length - 1) {
+        previewDisplay.innerText = "";
+        return;
+    }
+
+    const previewCount = 3;
+    const startIndex = currentWordIndex + 1;
+    const endIndex = Math.min(wordQueue.length, startIndex + previewCount);
+    previewDisplay.innerText = wordQueue.slice(startIndex, endIndex).join(" ");
+}
+
 function renderReadyState() {
     leftSpan.innerText = "";
     pivotSpan.innerText = "READY";
     rightSpan.innerText = "";
+    previewDisplay.innerText = "";
+    summaryDisplay.classList.remove("visible");
+    summaryDisplay.innerText = "";
+}
+
+function formatDuration(seconds) {
+    if (seconds < 60) {
+        return `${Math.round(seconds)} seconds`;
+    }
+    const minutes = seconds / 60;
+    return `${minutes.toFixed(1)} minutes`;
+}
+
+function showSummary() {
+    const elapsedSeconds = readingStartTimestamp
+        ? (performance.now() - readingStartTimestamp) / 1000
+        : 0;
+    const wordsRead = totalWordsPlanned || wordQueue.length;
+    const wpmEstimate = elapsedSeconds > 0
+        ? Math.round((wordsRead / elapsedSeconds) * 60)
+        : 0;
+
+    summaryDisplay.innerText = `Congratulations! You read ${wordsRead} words in ${formatDuration(elapsedSeconds)}. That's about ${wpmEstimate} WPM.`;
+    summaryDisplay.classList.add("visible");
+
+    if (summaryTimerId) {
+        clearTimeout(summaryTimerId);
+    }
+
+    summaryTimerId = setTimeout(() => {
+        stopReading();
+    }, 2500);
 }
 
 function showStartDelayIndicator() {
@@ -214,10 +270,19 @@ function startReading() {
     wordQueue = selectedText.split(/\s+/);
     currentWordIndex = 0;
     isPausedReading = false;
+    readingStartTimestamp = performance.now();
+    totalWordsPlanned = wordQueue.length;
+    if (summaryTimerId) {
+        clearTimeout(summaryTimerId);
+        summaryTimerId = null;
+    }
+    summaryDisplay.classList.remove("visible");
+    summaryDisplay.innerText = "";
     
     overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacityInput.value})`;
     pivotSpan.style.color = colorInput.value;
     overlay.classList.add("active");
+    controlsBar.classList.remove("visible");
     
     overlay.tabIndex = -1;
     overlay.focus();
@@ -228,8 +293,16 @@ function startReading() {
 function stopReading() {
     clearTimeout(loopTimerId);
     cancelStartDelay();
+    if (summaryTimerId) {
+        clearTimeout(summaryTimerId);
+        summaryTimerId = null;
+    }
+    summaryDisplay.classList.remove("visible");
+    summaryDisplay.innerText = "";
     overlay.classList.remove("active");
     wordDisplay.classList.remove("ghost");
+    previewDisplay.innerText = "";
+    controlsBar.classList.remove("visible");
 
     if (savedSelectionRange) {
         const selection = window.getSelection();
@@ -247,18 +320,20 @@ function scheduleNextWord() {
     if (isPausedReading) {
         const currentWord = wordQueue[currentWordIndex];
         renderSplitWord(currentWord);
+        updatePreview();
         leftSpan.innerText = ""; 
         rightSpan.innerText = " (PAUSED)";
         return;
     }
 
     if (currentWordIndex >= wordQueue.length) {
-        stopReading();
+        showSummary();
         return;
     }
 
     const currentWord = wordQueue[currentWordIndex];
     renderSplitWord(currentWord);
+    updatePreview();
 
     const progressPercent = ((currentWordIndex + 1) / wordQueue.length) * 100;
     progressBar.style.width = `${progressPercent}%`;
@@ -303,10 +378,12 @@ document.addEventListener("keydown", (e) => {
             if (isPausedReading) {
                 overlay.style.backgroundColor = `rgba(0, 0, 0, 0.3)`;
                 overlay.style.backdropFilter = "blur(0px)";
+                controlsBar.classList.add("visible");
                 scheduleNextWord();
             } else {
                 overlay.style.backgroundColor = `rgba(0, 0, 0, ${opacityInput.value})`;
                 overlay.style.backdropFilter = "blur(5px)";
+                controlsBar.classList.remove("visible");
                 scheduleNextWord();
             }
             break;

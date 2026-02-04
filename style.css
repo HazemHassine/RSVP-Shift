@@ -23,40 +23,107 @@
   pointer-events: auto;
 }
 
-#rsvp-word-display {
+#rsvp-line {
   display: flex;
   align-items: baseline;
-  justify-content: center;
+  gap: 12px;
   width: 100%;
-  font-size: 80px;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+#rsvp-word-display {
+  display: grid;
+  grid-template-columns: 12ch auto 12ch;
+  align-items: baseline;
+  justify-content: center;
+  width: 520px;
+  max-width: 60vw;
+  flex: 0 0 auto;
+  font-size: 72px;
   font-weight: 400;
   color: white;
-  margin-bottom: 50px;
   text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   font-family: "Roboto", "Segoe UI", BlinkMacSystemFont, sans-serif;
   user-select: none;
 }
 
 #rsvp-word-display.ghost {
-  opacity: 0.0;
+  opacity: 1;
+}
+
+#rsvp-word-display.ghost .rsvp-left,
+#rsvp-word-display.ghost .rsvp-right {
+  opacity: 0;
 }
 
 .rsvp-left {
-  flex: 1;
   text-align: right;
   color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rsvp-pivot {
+  position: relative;
   color: #ff4444;
   font-weight: 700;
   padding: 0 2px;
 }
 
+.rsvp-pivot::before,
+.rsvp-pivot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateX(-50%);
+}
+
+.rsvp-pivot::before {
+  top: -28px;
+  height: 18px;
+}
+
+.rsvp-pivot::after {
+  bottom: -28px;
+  height: 18px;
+}
+
 .rsvp-right {
-  flex: 1;
   text-align: left;
   color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#rsvp-preview {
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.5px;
+  width: 260px;
+  max-width: 30%;
+  text-align: left;
+  line-height: 1.4;
+  user-select: none;
+}
+
+#rsvp-summary {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 18px;
+  max-width: 70%;
+  text-align: center;
+  line-height: 1.5;
+  user-select: none;
+}
+
+#rsvp-summary.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .rsvp-controls {
@@ -68,6 +135,18 @@
   align-items: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s ease;
+}
+
+.rsvp-controls.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .rsvp-group {
