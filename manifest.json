@@ -1,11 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Fast Reader",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Read selected text faster, one focused word at a time.",
   "icons": {
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
+    "16": "icons/fast-reader-16.png",
+    "32": "icons/fast-reader-32.png",
+    "48": "icons/fast-reader-48.png",
+    "128": "icons/fast-reader-128.png"
   },
   "permissions": ["activeTab", "storage"],
   "background": {
@@ -13,8 +15,10 @@
   },
   "action": {
     "default_icon": {
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
+      "16": "icons/fast-reader-16.png",
+      "32": "icons/fast-reader-32.png",
+      "48": "icons/fast-reader-48.png",
+      "128": "icons/fast-reader-128.png"
     },
     "default_popup": "popup.html",
     "default_title": "Fast Reader"
