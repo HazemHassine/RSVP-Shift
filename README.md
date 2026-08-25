@@ -1,6 +1,21 @@
-# Fast Reader
+# RSVP Shift
 
-Fast Reader is a focused Chrome speed reader. Highlight text on almost any webpage and read it one word at a time using RSVP (rapid serial visual presentation).
+RSVP Shift is a focused Chrome speed reader. Highlight text on almost any webpage and read it one word at a time using RSVP (rapid serial visual presentation).
+
+## Screenshots
+
+![RSVP Shift settings and visual identity](screenshots/04_settings.png)
+*A focused reading experience with fast, practical controls and a bold red visual identity.*
+
+![RSVP Shift distraction-free focus mode](screenshots/01_focus_mode.png)
+*Distraction-free RSVP reading with a fixed red focus letter.*
+
+![RSVP Shift paused controls](screenshots/02_paused_controls.png)
+*Pause, scrub through the selection, adjust speed, or jump between words without losing your place.*
+
+![RSVP Shift keyboard shortcuts](screenshots/03_keyboard_help.png)
+*Keyboard-first controls stay available when needed and out of the way while reading.*
+
 
 ## Install in Chrome
 
@@ -8,7 +23,7 @@ Fast Reader is a focused Chrome speed reader. Highlight text on almost any webpa
 2. Turn on **Developer mode** in the top-right.
 3. Click **Load unpacked**.
 4. Select this project folder.
-5. Pin **Fast Reader** from Chrome's Extensions menu if you want quick access.
+5. Pin **RSVP Shift** from Chrome's Extensions menu if you want quick access.
 
 After updating the code, click the extension's **Reload** button on `chrome://extensions`, then reload any page that was already open.
 
@@ -55,7 +70,7 @@ Settings are validated, saved with `chrome.storage.sync`, and shared across tabs
 
 ## Privacy
 
-Fast Reader runs entirely in your browser. Selected text is processed only on the current page and is never sent anywhere. Only your reader settings are stored through Chrome sync.
+RSVP Shift runs entirely in your browser. Selected text is processed only on the current page and is never sent anywhere. Only your reader settings are stored through Chrome sync.
 
 ## Troubleshooting
 
