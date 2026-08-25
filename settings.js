@@ -2,7 +2,7 @@
   const DEFAULT_SETTINGS = Object.freeze({
     wpm: 300,
     fontSize: 68,
-    color: "#48e6b0",
+    color: "#ff4b26",
     opacity: 0.9,
     jumpStep: 10,
     smartTiming: true,

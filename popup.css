@@ -459,6 +459,10 @@ kbd {
   background: var(--accent);
 }
 
+.reset-settings {
+  margin-top: 12px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
