@@ -18,25 +18,38 @@ After updating the code, click the extension's **Reload** button on `chrome://ex
 2. Press `Ctrl+Shift+Q` (`Command+Shift+Q` on macOS), or open the extension and click **Read selected text**.
 3. Follow the highlighted focus letter while the words advance.
 
-The reader adds natural pauses after punctuation, gives longer words a little more time, and pauses automatically if you leave the tab.
+The reader keeps the focus letter fixed, hides its controls during playback, adds natural punctuation and long-word timing, and pauses automatically if you leave the tab. Move the pointer or press `?` whenever you need the controls.
 
 | Control | Action |
 | --- | --- |
 | `Space` | Pause or resume |
 | `↑` / `↓` | Increase or decrease speed |
 | `←` / `→` | Jump backward or forward |
+| `Shift` + `←` / `→` | Move to the previous or next sentence |
+| `Home` | Restart the selection |
+| `?` | Show or hide controls and help |
 | `Esc` | Close the reader |
 
-You can also pause and close with the buttons in the reader. Settings appear when reading is paused, so they stay out of the way while you focus.
+You can drag the progress bar to reread any part of the selection. Scrubbing pauses playback and resumes automatically if the reader was playing beforehand.
 
 ## Settings
 
 The popup lets you adjust:
 
 - Reading speed from 50 to 1200 WPM
+- Text size from 32 to 120 pixels
 - Arrow-key jump size
 - Focus-letter color
 - Background dimming
+
+Advanced settings stay collapsed until needed and include:
+
+- Smart long-word timing and punctuation pause strength
+- Optional previous/next context (off by default)
+- Colored, underlined, block, or disabled focus markers
+- Fixation guide strength
+- Dimmed-page or solid-black background
+- Start delay and automatic control hiding
 
 Settings are validated, saved with `chrome.storage.sync`, and shared across tabs. You can change the global shortcut at `chrome://extensions/shortcuts`.
 

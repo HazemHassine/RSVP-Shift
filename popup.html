@@ -22,46 +22,55 @@
       <p id="action-status" class="status" role="status" aria-live="polite"></p>
     </section>
 
+    <section id="calibration" class="card calibration" aria-labelledby="calibration-title" hidden>
+      <div class="section-heading">
+        <h2 id="calibration-title">Choose a starting pace</h2>
+        <button id="skip-calibration" class="text-button" type="button">Skip</button>
+      </div>
+      <p>Pick what sounds comfortable. You can change it anytime.</p>
+      <div class="calibration-options">
+        <button type="button" data-calibration-wpm="250"><strong>250</strong><span>Relaxed</span></button>
+        <button type="button" data-calibration-wpm="300"><strong>300</strong><span>Normal</span></button>
+        <button type="button" data-calibration-wpm="400"><strong>400</strong><span>Fast</span></button>
+      </div>
+    </section>
+
     <section class="card" aria-labelledby="settings-title">
       <div class="section-heading">
-        <h2 id="settings-title">Reading settings</h2>
+        <h2 id="settings-title">Reading</h2>
         <button id="reset" class="text-button" type="button">Reset</button>
       </div>
 
       <label class="field" for="wpm">
-        <span>
-          Speed
-          <small>50–1200 WPM</small>
-        </span>
+        <span>Speed<small>Comfort matters more than the number</small></span>
         <span class="input-with-unit">
-          <input type="number" id="wpm" min="50" max="1200" step="50" inputmode="numeric" />
+          <input type="number" id="wpm" min="50" max="1200" step="25" inputmode="numeric" />
           <span>WPM</span>
         </span>
       </label>
 
-      <label class="field" for="jump">
-        <span>
-          Arrow-key jump
-          <small>Words per jump</small>
+      <label class="field slider-field" for="font-size">
+        <span>Text size<small>32–120 pixels</small></span>
+        <span class="slider-control">
+          <input type="range" id="font-size" min="32" max="120" step="2" />
+          <output id="font-size-value" for="font-size"></output>
         </span>
+      </label>
+
+      <label class="field" for="jump">
+        <span>Arrow-key jump<small>Words per jump</small></span>
         <input type="number" id="jump" min="1" max="100" step="1" inputmode="numeric" />
       </label>
 
       <label class="field" for="color">
-        <span>
-          Focus letter
-          <small>Pivot color</small>
-        </span>
+        <span>Focus letter<small>Used by colored marker styles</small></span>
         <input type="color" id="color" aria-label="Focus letter color" />
       </label>
 
       <label class="field slider-field" for="opacity">
-        <span>
-          Background dim
-          <small>Reduce page distractions</small>
-        </span>
+        <span>Background dim<small>Page visibility behind the reader</small></span>
         <span class="slider-control">
-          <input type="range" id="opacity" min="0.5" max="1" step="0.05" />
+          <input type="range" id="opacity" min="0" max="1" step="0.05" />
           <output id="opacity-value" for="opacity"></output>
         </span>
       </label>
@@ -69,16 +78,91 @@
       <p id="save-status" class="save-status" role="status" aria-live="polite"></p>
     </section>
 
-    <details class="card shortcuts-card">
+    <details class="card disclosure">
+      <summary>Advanced reading</summary>
+      <div class="disclosure-content">
+        <label class="field compact-field" for="smart-timing">
+          <span>Smart timing<small>More time for longer words</small></span>
+          <input type="checkbox" id="smart-timing" />
+        </label>
+
+        <label class="field compact-field" for="punctuation-pauses">
+          <span>Punctuation pauses</span>
+          <select id="punctuation-pauses">
+            <option value="off">Off</option>
+            <option value="light">Light</option>
+            <option value="normal">Normal</option>
+            <option value="strong">Strong</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="context-preview">
+          <span>Context preview</span>
+          <select id="context-preview">
+            <option value="off">Off</option>
+            <option value="previous">Previous</option>
+            <option value="both">Previous + next</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="focus-style">
+          <span>Focus marker</span>
+          <select id="focus-style">
+            <option value="color">Colored letter</option>
+            <option value="underline">Underline</option>
+            <option value="marker">Block marker</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="fixation-guides">
+          <span>Fixation guides</span>
+          <select id="fixation-guides">
+            <option value="off">Off</option>
+            <option value="minimal">Minimal</option>
+            <option value="full">Full</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="background-mode">
+          <span>Background</span>
+          <select id="background-mode">
+            <option value="dim">Dim page</option>
+            <option value="solid">Solid black</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="start-delay">
+          <span>Start delay</span>
+          <select id="start-delay">
+            <option value="0">Off</option>
+            <option value="1">1 second</option>
+            <option value="3">3 seconds</option>
+          </select>
+        </label>
+
+        <label class="field compact-field" for="auto-hide-controls">
+          <span>Auto-hide controls</span>
+          <input type="checkbox" id="auto-hide-controls" />
+        </label>
+      </div>
+    </details>
+
+    <details class="card disclosure shortcuts-card">
       <summary>Keyboard controls</summary>
-      <ul class="shortcuts">
-        <li><span>Start or stop</span><kbd id="toggle-shortcut">Ctrl+Shift+Q</kbd></li>
-        <li><span>Pause or resume</span><kbd>Space</kbd></li>
-        <li><span>Adjust speed</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
-        <li><span>Jump through text</span><span><kbd>←</kbd> <kbd>→</kbd></span></li>
-        <li><span>Close</span><kbd>Esc</kbd></li>
-      </ul>
-      <button id="open-shortcuts" class="secondary" type="button">Edit Chrome shortcut</button>
+      <div class="disclosure-content">
+        <ul class="shortcuts">
+          <li><span>Start or stop</span><kbd id="toggle-shortcut">Ctrl+Shift+Q</kbd></li>
+          <li><span>Pause or resume</span><kbd>Space</kbd></li>
+          <li><span>Adjust speed</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
+          <li><span>Jump words</span><span><kbd>←</kbd> <kbd>→</kbd></span></li>
+          <li><span>Jump sentence</span><span><kbd>Shift</kbd> + <kbd>←</kbd>/<kbd>→</kbd></span></li>
+          <li><span>Restart</span><kbd>Home</kbd></li>
+          <li><span>Show controls</span><kbd>?</kbd></li>
+          <li><span>Close</span><kbd>Esc</kbd></li>
+        </ul>
+        <button id="open-shortcuts" class="secondary" type="button">Edit Chrome shortcut</button>
+      </div>
     </details>
 
     <script src="settings.js"></script>

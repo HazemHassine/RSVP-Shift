@@ -3,12 +3,11 @@
   --rsvp-accent: #e6ff38;
   --rsvp-danger: #ff4b26;
   --rsvp-dim: 0.9;
-  --rsvp-pivot-color: #ff5a67;
+  --rsvp-font-size: 68px;
+  --rsvp-pivot-color: #48e6b0;
   position: fixed;
   inset: 0;
   z-index: 2147483647;
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto;
   box-sizing: border-box;
   width: 100vw;
   height: 100vh;
@@ -16,9 +15,8 @@
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  color: #f6f8fb;
+  color: #fff;
   background: rgb(0 0 0 / var(--rsvp-dim));
-  backdrop-filter: none;
   color-scheme: dark;
   isolation: isolate;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
@@ -39,24 +37,47 @@
 }
 
 #rsvp-overlay.paused {
-  background: rgb(0 0 0 / 0.68);
-  backdrop-filter: none;
+  background: rgb(0 0 0 / 0.7);
+}
+
+#rsvp-overlay[data-background-mode="solid"],
+#rsvp-overlay[data-background-mode="solid"].paused {
+  background: #090909;
+}
+
+#rsvp-overlay .rsvp-reader-chrome {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms linear, visibility 120ms linear;
+}
+
+#rsvp-overlay.chrome-visible .rsvp-reader-chrome,
+#rsvp-overlay.paused .rsvp-reader-chrome,
+#rsvp-overlay.finished .rsvp-reader-chrome {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 #rsvp-overlay .rsvp-topbar {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  z-index: 4;
   display: flex;
+  width: min(1120px, calc(100vw - 48px));
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  width: min(1120px, calc(100vw - 48px));
-  margin: 22px auto 12px;
+  transform: translateX(-50%);
 }
 
 #rsvp-overlay #rsvp-status {
   overflow: hidden;
-  color: rgb(255 255 255 / 0.62);
-  font-size: 13px;
-  font-weight: 600;
+  color: rgb(255 255 255 / 0.7);
+  font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-overflow: ellipsis;
   text-transform: uppercase;
@@ -69,104 +90,186 @@
   gap: 8px;
 }
 
-#rsvp-overlay .rsvp-action-button {
-  min-width: 70px;
-  height: 36px;
-  margin: 0;
-  padding: 0 13px;
-  border: 2px solid #fff;
-  border-radius: 0;
-  color: #f7f9fc;
-  background: #000;
-  box-shadow: none;
+#rsvp-overlay button {
   font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
-  appearance: none;
-  text-transform: uppercase;
-  transition: color 80ms linear, background 80ms linear;
 }
 
-#rsvp-overlay .rsvp-action-button:hover {
+#rsvp-overlay .rsvp-action-button,
+#rsvp-overlay .rsvp-control-button {
+  min-width: 72px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  border: 2px solid #fff;
+  border-radius: 0;
+  color: #fff;
+  background: #000;
+  box-shadow: none;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  appearance: none;
+}
+
+#rsvp-overlay .rsvp-action-button:hover,
+#rsvp-overlay .rsvp-control-button:hover {
   border-color: var(--rsvp-accent);
   color: #000;
   background: var(--rsvp-accent);
 }
 
-#rsvp-overlay .rsvp-action-button:active {
-  transform: none;
-}
-
-#rsvp-overlay .rsvp-action-button:disabled {
+#rsvp-overlay .rsvp-action-button:disabled,
+#rsvp-overlay .rsvp-control-button:disabled {
   cursor: default;
-  opacity: 0.38;
+  opacity: 0.4;
 }
 
 #rsvp-overlay .rsvp-action-button:focus-visible,
+#rsvp-overlay .rsvp-control-button:focus-visible,
 #rsvp-overlay input:focus-visible {
   outline: 2px solid var(--rsvp-accent);
   outline-offset: 2px;
 }
 
 #rsvp-overlay .rsvp-close-button {
-  min-width: 36px;
-  width: 36px;
+  min-width: 40px;
+  width: 40px;
   padding: 0;
   font-size: 22px;
   font-weight: 400;
 }
 
-#rsvp-overlay .rsvp-progress-container {
+#rsvp-overlay .rsvp-progress-shell {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  z-index: 4;
   width: min(1120px, calc(100vw - 48px));
+  transform: translateX(-50%);
+}
+
+#rsvp-overlay .rsvp-progress-container {
+  position: relative;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+}
+
+#rsvp-overlay .rsvp-progress-container::before {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  left: 0;
   height: 6px;
-  margin: 0 auto;
-  overflow: hidden;
   border: 1px solid #fff;
-  border-radius: 0;
+  content: "";
   background: #000;
 }
 
 #rsvp-overlay .rsvp-progress-bar {
+  position: absolute;
+  top: 7px;
+  left: 1px;
   width: 0;
-  height: 100%;
-  border-radius: 0;
+  height: 4px;
   background: var(--rsvp-accent);
-  box-shadow: none;
-  transition: width 100ms linear;
+  pointer-events: none;
+  transition: width 90ms linear;
+}
+
+#rsvp-overlay #rsvp-scrubber {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: ew-resize;
+  appearance: none;
+}
+
+#rsvp-overlay #rsvp-scrubber::-webkit-slider-runnable-track {
+  height: 18px;
+  background: transparent;
+}
+
+#rsvp-overlay #rsvp-scrubber::-webkit-slider-thumb {
+  width: 14px;
+  height: 18px;
+  border: 2px solid #000;
+  border-radius: 0;
+  background: #fff;
+  cursor: ew-resize;
+  appearance: none;
+}
+
+#rsvp-overlay .rsvp-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  color: rgb(255 255 255 / 0.62);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 #rsvp-overlay .rsvp-stage {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: flex;
   min-width: 0;
   min-height: 0;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px 56px;
+  pointer-events: none;
+}
+
+#rsvp-overlay .rsvp-stage button,
+#rsvp-overlay .rsvp-stage input {
+  pointer-events: auto;
 }
 
 #rsvp-overlay #rsvp-start-delay {
   position: absolute;
-  top: clamp(28px, 9vh, 96px);
-  width: 44px;
-  height: 44px;
+  top: calc(50% - 145px);
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
   border: 2px solid #fff;
-  border-radius: 0;
   opacity: 0;
-  transform: rotate(var(--rsvp-start-progress, 0deg)) scale(0.88);
+  color: #000;
   background: var(--rsvp-accent);
-  box-shadow: inset 0 0 0 8px #000;
+  box-shadow: inset 0 0 0 7px #000;
+  font-size: 12px;
+  font-weight: 900;
   pointer-events: none;
-  transition: opacity 80ms linear;
 }
 
 #rsvp-overlay #rsvp-start-delay.active {
   opacity: 1;
-  transform: rotate(var(--rsvp-start-progress, 0deg)) scale(1);
+}
+
+#rsvp-overlay #rsvp-paused-label {
+  position: absolute;
+  top: calc(50% - 105px);
+  visibility: hidden;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+}
+
+#rsvp-overlay.paused #rsvp-paused-label {
+  visibility: visible;
+  opacity: 1;
 }
 
 #rsvp-overlay #rsvp-line {
@@ -176,17 +279,18 @@
   min-width: 0;
   align-items: baseline;
   justify-content: center;
+  pointer-events: none;
 }
 
 #rsvp-overlay #rsvp-word-display {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: baseline;
-  width: min(760px, 84vw);
+  width: min(1280px, 96vw);
   min-width: 0;
   color: #fff;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  font-size: clamp(46px, 6.8vw, 82px);
+  font-size: clamp(32px, var(--rsvp-font-size), 120px);
   font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 1.2;
@@ -218,104 +322,168 @@
   font-weight: 900;
 }
 
+#rsvp-overlay[data-focus-style="underline"] .rsvp-pivot {
+  padding-bottom: 0.04em;
+  border-bottom: 0.08em solid var(--rsvp-pivot-color);
+  color: #fff;
+}
+
+#rsvp-overlay[data-focus-style="marker"] .rsvp-pivot {
+  color: #000;
+  background: var(--rsvp-pivot-color);
+}
+
+#rsvp-overlay[data-focus-style="none"] .rsvp-pivot {
+  color: #fff;
+}
+
 #rsvp-overlay .rsvp-pivot::before,
 #rsvp-overlay .rsvp-pivot::after {
   position: absolute;
   left: 50%;
   width: 2px;
   height: 15px;
-  border-radius: 0;
   content: "";
   background: #fff;
   transform: translateX(-50%);
 }
 
 #rsvp-overlay .rsvp-pivot::before {
-  top: -23px;
+  top: -24px;
 }
 
 #rsvp-overlay .rsvp-pivot::after {
-  bottom: -23px;
+  bottom: -24px;
 }
 
-#rsvp-overlay #rsvp-preview {
+#rsvp-overlay[data-guides="off"] .rsvp-pivot::before,
+#rsvp-overlay[data-guides="off"] .rsvp-pivot::after {
+  display: none;
+}
+
+#rsvp-overlay[data-guides="full"] .rsvp-pivot::before,
+#rsvp-overlay[data-guides="full"] .rsvp-pivot::after {
+  width: 3px;
+  height: 30px;
+}
+
+#rsvp-overlay[data-guides="full"] .rsvp-pivot::before {
+  top: -40px;
+}
+
+#rsvp-overlay[data-guides="full"] .rsvp-pivot::after {
+  bottom: -40px;
+}
+
+#rsvp-overlay .rsvp-context {
   position: absolute;
   top: 50%;
-  left: calc(50% + min(39vw, 400px));
-  width: min(240px, 18vw);
+  display: none;
+  max-width: 18vw;
   overflow: hidden;
-  color: rgb(255 255 255 / 0.3);
-  font-size: clamp(14px, 1.5vw, 20px);
-  font-weight: 450;
-  letter-spacing: -0.03em;
-  line-height: 1.45;
+  color: rgb(255 255 255 / 0.28);
+  font-size: clamp(13px, 1.3vw, 18px);
+  font-weight: 600;
   text-overflow: ellipsis;
+  white-space: nowrap;
   transform: translateY(-50%);
   user-select: none;
 }
 
-#rsvp-overlay.paused #rsvp-preview {
-  color: rgb(255 255 255 / 0.5);
+#rsvp-overlay #rsvp-context-previous {
+  right: calc(50% + min(43vw, 470px));
+  text-align: right;
+}
+
+#rsvp-overlay #rsvp-context-next {
+  left: calc(50% + min(43vw, 470px));
+  text-align: left;
+}
+
+#rsvp-overlay[data-context="previous"] #rsvp-context-previous,
+#rsvp-overlay[data-context="both"] .rsvp-context {
+  display: block;
+}
+
+#rsvp-overlay #rsvp-feedback,
+#rsvp-overlay #rsvp-summary {
+  position: absolute;
+  top: calc(50% + 95px);
+  max-width: min(680px, 82vw);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-align: center;
+  text-transform: uppercase;
+  visibility: hidden;
+  opacity: 0;
+  user-select: none;
+  transition: opacity 100ms linear, visibility 100ms linear;
+}
+
+#rsvp-overlay #rsvp-feedback.visible,
+#rsvp-overlay #rsvp-summary.visible {
+  visibility: visible;
+  opacity: 1;
 }
 
 #rsvp-overlay #rsvp-summary {
-  position: absolute;
-  top: calc(50% + clamp(78px, 10vw, 118px));
-  max-width: min(680px, 82vw);
-  color: rgb(255 255 255 / 0.72);
-  font-size: clamp(14px, 1.7vw, 18px);
-  font-weight: 500;
-  line-height: 1.5;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(6px);
-  user-select: none;
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-
-#rsvp-overlay #rsvp-summary.visible {
-  opacity: 1;
-  transform: translateY(0);
+  top: calc(50% + 110px);
+  color: rgb(255 255 255 / 0.75);
+  font-size: 15px;
+  text-transform: none;
 }
 
 #rsvp-overlay .rsvp-controls {
   position: absolute;
-  top: calc(50% + clamp(92px, 12vw, 142px));
+  top: calc(50% + 150px);
   display: flex;
+  max-width: calc(100vw - 32px);
   align-items: center;
   gap: 0;
-  max-width: calc(100vw - 32px);
-  padding: 10px 12px;
+  padding: 8px;
   border: 2px solid #fff;
-  border-radius: 0;
-  visibility: hidden;
-  opacity: 0;
   background: #000;
-  box-shadow: none;
   pointer-events: none;
-  transform: translateY(7px);
-  transition: opacity 80ms linear, visibility 80ms linear;
+  transform: translateY(6px);
 }
 
-#rsvp-overlay.paused .rsvp-controls {
-  visibility: visible;
-  opacity: 1;
+#rsvp-overlay.chrome-visible .rsvp-controls,
+#rsvp-overlay.paused .rsvp-controls,
+#rsvp-overlay.finished .rsvp-controls {
   pointer-events: auto;
   transform: translateY(0);
 }
 
+#rsvp-overlay .rsvp-control-button {
+  min-width: 72px;
+  border-width: 1px;
+}
+
+#rsvp-overlay .rsvp-resume-button {
+  min-width: 92px;
+  border-right: 0;
+  border-left: 0;
+}
+
+#rsvp-overlay .rsvp-control-divider {
+  width: 2px;
+  height: 40px;
+  margin: 0 8px;
+  background: #fff;
+}
+
 #rsvp-overlay .rsvp-control {
   display: flex;
-  min-height: 38px;
+  min-height: 40px;
   align-items: center;
-  gap: 9px;
-  padding: 0 14px;
-  border-right: 2px solid #fff;
-  color: rgb(255 255 255 / 0.58);
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 650;
-  line-height: 1;
+  gap: 8px;
+  padding: 0 10px;
+  border-right: 1px solid rgb(255 255 255 / 0.5);
+  color: rgb(255 255 255 / 0.65);
+  font-size: 10px;
+  font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
@@ -324,22 +492,18 @@
   border-right: 0;
 }
 
-#rsvp-overlay .rsvp-control input {
-  margin: 0;
-  color: #fff;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-}
-
 #rsvp-overlay .rsvp-control input[type="number"] {
-  width: 62px;
-  height: 32px;
-  padding: 0 7px;
+  width: 84px;
+  height: 34px;
+  margin: 0;
+  padding: 0 30px 0 6px;
   border: 1px solid #fff;
   border-radius: 0;
+  color: #fff;
   background: #111;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
   text-align: center;
   appearance: textfield;
 }
@@ -356,85 +520,39 @@
   align-items: center;
 }
 
-#rsvp-overlay .rsvp-input-with-unit input[type="number"] {
-  width: 86px;
-  padding-right: 34px;
-}
-
 #rsvp-overlay .rsvp-input-with-unit small {
   position: absolute;
-  right: 8px;
-  color: rgb(255 255 255 / 0.38);
-  font-family: inherit;
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1;
+  right: 7px;
+  color: rgb(255 255 255 / 0.4);
+  font-size: 8px;
+  font-weight: 700;
   pointer-events: none;
 }
 
-#rsvp-overlay .rsvp-control input[type="range"] {
-  width: 92px;
-  height: 18px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  appearance: none;
-}
-
-#rsvp-overlay .rsvp-control input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 4px;
-  border: 0;
-  border-radius: 0;
-  background: #fff;
-  cursor: pointer;
-}
-
-#rsvp-overlay .rsvp-control input[type="range"]::-webkit-slider-thumb {
-  width: 15px;
-  height: 15px;
-  margin-top: -5.5px;
-  border: 0;
-  border: 2px solid #000;
-  border-radius: 0;
-  background: var(--rsvp-accent);
-  box-shadow: none;
-  cursor: pointer;
-  appearance: none;
-}
-
-#rsvp-overlay .rsvp-control input[type="color"] {
-  width: 31px;
-  height: 31px;
-  padding: 2px;
-  border: 1px solid #fff;
-  border-radius: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-#rsvp-overlay .rsvp-control input[type="color"]::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-#rsvp-overlay .rsvp-control input[type="color"]::-webkit-color-swatch {
-  border: 0;
-  border-radius: 0;
-}
-
-#rsvp-overlay .rsvp-key-hints {
+#rsvp-overlay .rsvp-help {
+  position: absolute;
+  bottom: 24px;
   display: flex;
-  align-items: center;
+  visibility: hidden;
+  max-width: calc(100vw - 32px);
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 18px;
-  min-height: 52px;
-  padding: 9px 20px 15px;
-  color: rgb(255 255 255 / 0.35);
-  font-size: 11px;
-  user-select: none;
+  gap: 13px;
+  padding: 9px 12px;
+  border: 2px solid #fff;
+  color: rgb(255 255 255 / 0.65);
+  background: #000;
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
 }
 
-#rsvp-overlay .rsvp-key-hints span {
+#rsvp-overlay.help-visible .rsvp-help {
+  visibility: visible;
+  opacity: 1;
+}
+
+#rsvp-overlay .rsvp-help span {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -442,35 +560,15 @@
 
 #rsvp-overlay kbd {
   min-width: 22px;
-  margin: 0;
   padding: 3px 5px;
-  border: 1px solid rgb(255 255 255 / 0.6);
-  border-radius: 0;
-  color: rgb(255 255 255 / 0.56);
+  border: 1px solid rgb(255 255 255 / 0.65);
+  color: #fff;
   background: #000;
-  box-shadow: none;
   font-family: inherit;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 9px;
+  font-weight: 700;
   line-height: 1;
   text-align: center;
-}
-
-#rsvp-overlay .rsvp-jump-indicator {
-  position: absolute;
-  top: 32%;
-  left: 50%;
-  z-index: 2;
-  color: var(--rsvp-accent);
-  font-size: 26px;
-  font-weight: 760;
-  text-shadow: none;
-  pointer-events: none;
-  animation: rsvp-fade-up 750ms ease-out forwards;
-}
-
-#rsvp-overlay .rsvp-jump-indicator.backward {
-  color: var(--rsvp-danger);
 }
 
 #rsvp-toast {
@@ -479,10 +577,9 @@
   left: 50%;
   bottom: 28px;
   z-index: 2147483647;
-  max-width: min(420px, calc(100vw - 32px));
+  max-width: min(460px, calc(100vw - 32px));
   padding: 11px 15px;
   border: 2px solid #111;
-  border-radius: 0;
   color: #111;
   background: #f1efe8;
   box-shadow: 5px 5px 0 #111;
@@ -491,12 +588,11 @@
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, 8px);
-  transition: opacity 150ms ease, transform 150ms ease;
+  transition: opacity 100ms linear, transform 100ms linear;
 }
 
 #rsvp-toast[data-tone="error"] {
-  border-color: #111;
-  background: #ff4b26;
+  background: var(--rsvp-danger, #ff4b26);
 }
 
 #rsvp-toast.visible {
@@ -504,63 +600,50 @@
   transform: translate(-50%, 0);
 }
 
-@keyframes rsvp-fade-up {
-  from {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -34px) scale(1.06);
-  }
-}
-
 @media (max-width: 900px) {
-  #rsvp-overlay #rsvp-preview {
-    display: none;
+  #rsvp-overlay .rsvp-context {
+    display: none !important;
   }
 
   #rsvp-overlay .rsvp-controls {
-    width: min(440px, calc(100vw - 32px));
+    top: auto;
+    bottom: 70px;
     flex-wrap: wrap;
     justify-content: center;
-    border-radius: 0;
   }
 
   #rsvp-overlay .rsvp-control {
-    flex: 1 1 45%;
-    justify-content: space-between;
     border-right: 0;
   }
 }
 
-@media (max-width: 560px), (max-height: 560px) {
+@media (max-width: 620px), (max-height: 560px) {
   #rsvp-overlay .rsvp-topbar,
-  #rsvp-overlay .rsvp-progress-container {
+  #rsvp-overlay .rsvp-progress-shell {
     width: calc(100vw - 28px);
   }
 
   #rsvp-overlay .rsvp-topbar {
-    margin-top: 14px;
+    top: 12px;
   }
 
-  #rsvp-overlay .rsvp-stage {
-    padding-inline: 14px;
+  #rsvp-overlay .rsvp-progress-shell {
+    top: 62px;
   }
 
   #rsvp-overlay #rsvp-word-display {
-    width: 94vw;
-    font-size: clamp(36px, 12vw, 58px);
+    width: 96vw;
+    font-size: clamp(30px, var(--rsvp-font-size), 76px);
   }
 
-  #rsvp-overlay .rsvp-key-hints {
-    gap: 9px;
-    overflow: hidden;
-    font-size: 0;
+  #rsvp-overlay .rsvp-control-divider,
+  #rsvp-overlay .rsvp-control {
+    display: none;
   }
 
-  #rsvp-overlay .rsvp-key-hints kbd {
-    font-size: 10px;
+  #rsvp-overlay .rsvp-help {
+    bottom: 12px;
+    gap: 7px;
   }
 }
 

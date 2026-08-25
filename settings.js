@@ -1,14 +1,25 @@
 (() => {
   const DEFAULT_SETTINGS = Object.freeze({
     wpm: 300,
-    color: "#ff5a67",
+    fontSize: 68,
+    color: "#48e6b0",
     opacity: 0.9,
     jumpStep: 10,
+    smartTiming: true,
+    punctuationPauses: "normal",
+    contextPreview: "off",
+    focusStyle: "color",
+    fixationGuides: "minimal",
+    backgroundMode: "dim",
+    startDelay: 1,
+    autoHideControls: true,
+    calibrationSeen: false,
   });
 
   const LIMITS = Object.freeze({
     wpm: Object.freeze({ min: 50, max: 1200 }),
-    opacity: Object.freeze({ min: 0.5, max: 1 }),
+    fontSize: Object.freeze({ min: 32, max: 120 }),
+    opacity: Object.freeze({ min: 0, max: 1 }),
     jumpStep: Object.freeze({ min: 1, max: 100 }),
   });
 
@@ -32,6 +43,14 @@
           LIMITS.wpm.max,
         ),
       ),
+      fontSize: Math.round(
+        clampNumber(
+          settings.fontSize,
+          DEFAULT_SETTINGS.fontSize,
+          LIMITS.fontSize.min,
+          LIMITS.fontSize.max,
+        ),
+      ),
       color,
       opacity: clampNumber(
         settings.opacity,
@@ -47,6 +66,33 @@
           LIMITS.jumpStep.max,
         ),
       ),
+      smartTiming: typeof settings.smartTiming === "boolean"
+        ? settings.smartTiming
+        : DEFAULT_SETTINGS.smartTiming,
+      punctuationPauses: ["off", "light", "normal", "strong"].includes(settings.punctuationPauses)
+        ? settings.punctuationPauses
+        : DEFAULT_SETTINGS.punctuationPauses,
+      contextPreview: ["off", "previous", "both"].includes(settings.contextPreview)
+        ? settings.contextPreview
+        : DEFAULT_SETTINGS.contextPreview,
+      focusStyle: ["color", "underline", "marker", "none"].includes(settings.focusStyle)
+        ? settings.focusStyle
+        : DEFAULT_SETTINGS.focusStyle,
+      fixationGuides: ["off", "minimal", "full"].includes(settings.fixationGuides)
+        ? settings.fixationGuides
+        : DEFAULT_SETTINGS.fixationGuides,
+      backgroundMode: ["dim", "solid"].includes(settings.backgroundMode)
+        ? settings.backgroundMode
+        : DEFAULT_SETTINGS.backgroundMode,
+      startDelay: [0, 1, 3].includes(Number(settings.startDelay))
+        ? Number(settings.startDelay)
+        : DEFAULT_SETTINGS.startDelay,
+      autoHideControls: typeof settings.autoHideControls === "boolean"
+        ? settings.autoHideControls
+        : DEFAULT_SETTINGS.autoHideControls,
+      calibrationSeen: typeof settings.calibrationSeen === "boolean"
+        ? settings.calibrationSeen
+        : DEFAULT_SETTINGS.calibrationSeen,
     };
   }
 
