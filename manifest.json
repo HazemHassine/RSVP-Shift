@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "Fast Reader",
+  "name": "RSVP Shift",
   "version": "1.3.0",
   "description": "Read selected text faster, one focused word at a time.",
   "icons": {
-    "16": "icons/fast-reader-16.png",
-    "32": "icons/fast-reader-32.png",
-    "48": "icons/fast-reader-48.png",
-    "128": "icons/fast-reader-128.png"
+    "16": "icons/rsvp-shift-16.png",
+    "32": "icons/rsvp-shift-32.png",
+    "48": "icons/rsvp-shift-48.png",
+    "128": "icons/rsvp-shift-128.png"
   },
   "permissions": ["activeTab", "storage"],
   "background": {
@@ -15,13 +15,13 @@
   },
   "action": {
     "default_icon": {
-      "16": "icons/fast-reader-16.png",
-      "32": "icons/fast-reader-32.png",
-      "48": "icons/fast-reader-48.png",
-      "128": "icons/fast-reader-128.png"
+      "16": "icons/rsvp-shift-16.png",
+      "32": "icons/rsvp-shift-32.png",
+      "48": "icons/rsvp-shift-48.png",
+      "128": "icons/rsvp-shift-128.png"
     },
     "default_popup": "popup.html",
-    "default_title": "Fast Reader"
+    "default_title": "RSVP Shift"
   },
   "commands": {
     "toggle-reader": {
@@ -29,7 +29,7 @@
         "default": "Ctrl+Shift+Q",
         "mac": "Command+Shift+Q"
       },
-      "description": "Toggle Fast Reader"
+      "description": "Toggle RSVP Shift"
     }
   },
   "content_scripts": [

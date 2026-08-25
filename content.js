@@ -39,13 +39,13 @@
   overlay.tabIndex = -1;
   overlay.setAttribute("role", "dialog");
   overlay.setAttribute("aria-modal", "true");
-  overlay.setAttribute("aria-label", "Fast Reader");
+  overlay.setAttribute("aria-label", "RSVP Shift");
   overlay.innerHTML = `
     <div class="rsvp-topbar rsvp-reader-chrome">
       <div id="rsvp-status" role="status" aria-live="polite">Ready</div>
       <div class="rsvp-window-actions">
         <button type="button" id="rsvp-top-pause" class="rsvp-action-button">Pause</button>
-        <button type="button" id="rsvp-close" class="rsvp-action-button rsvp-close-button" aria-label="Close Fast Reader" title="Close (Esc)">×</button>
+        <button type="button" id="rsvp-close" class="rsvp-action-button rsvp-close-button" aria-label="Close RSVP Shift" title="Close (Esc)">×</button>
       </div>
     </div>
 
