@@ -3,57 +3,85 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Fast Reader Settings</title>
+    <title>Fast Reader</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <header class="header">
+      <img src="icons/icon48.png" width="36" height="36" alt="" />
       <div>
         <h1>Fast Reader</h1>
-        <p>Settings & shortcuts</p>
+        <p>Focus on one word at a time.</p>
       </div>
-      <button id="toggle-reader" class="primary">Start/Stop</button>
     </header>
 
-    <section class="card">
-      <h2>Reading</h2>
-      <div class="field">
-        <label for="wpm">Words per minute</label>
-        <input type="number" id="wpm" min="50" step="50" />
-      </div>
-      <div class="field">
-        <label for="jump">Jump size</label>
-        <input type="number" id="jump" min="1" step="1" />
-      </div>
-      <div class="field">
-        <label for="color">Pivot color</label>
-        <input type="color" id="color" />
-      </div>
-      <div class="field">
-        <label for="opacity">Background dim</label>
-        <input type="range" id="opacity" min="0.5" max="1" step="0.05" />
-        <span id="opacity-value" class="value"></span>
-      </div>
-      <div class="actions">
-        <button id="reset" class="ghost">Reset defaults</button>
-      </div>
+    <section class="quick-start" aria-labelledby="quick-start-title">
+      <h2 id="quick-start-title">Ready when you are</h2>
+      <p>Highlight text on this page, then start reading.</p>
+      <button id="toggle-reader" class="primary" type="button">Read selected text</button>
+      <p id="action-status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <section class="card">
-      <h2>Shortcuts</h2>
+    <section class="card" aria-labelledby="settings-title">
+      <div class="section-heading">
+        <h2 id="settings-title">Reading settings</h2>
+        <button id="reset" class="text-button" type="button">Reset</button>
+      </div>
+
+      <label class="field" for="wpm">
+        <span>
+          Speed
+          <small>50–1200 WPM</small>
+        </span>
+        <span class="input-with-unit">
+          <input type="number" id="wpm" min="50" max="1200" step="50" inputmode="numeric" />
+          <span>WPM</span>
+        </span>
+      </label>
+
+      <label class="field" for="jump">
+        <span>
+          Arrow-key jump
+          <small>Words per jump</small>
+        </span>
+        <input type="number" id="jump" min="1" max="100" step="1" inputmode="numeric" />
+      </label>
+
+      <label class="field" for="color">
+        <span>
+          Focus letter
+          <small>Pivot color</small>
+        </span>
+        <input type="color" id="color" aria-label="Focus letter color" />
+      </label>
+
+      <label class="field slider-field" for="opacity">
+        <span>
+          Background dim
+          <small>Reduce page distractions</small>
+        </span>
+        <span class="slider-control">
+          <input type="range" id="opacity" min="0.5" max="1" step="0.05" />
+          <output id="opacity-value" for="opacity"></output>
+        </span>
+      </label>
+
+      <p id="save-status" class="save-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <details class="card shortcuts-card">
+      <summary>Keyboard controls</summary>
       <ul class="shortcuts">
-        <li><span>Start/Stop</span><kbd>Ctrl+Shift+Q</kbd> / <kbd>Command+Shift+Q</kbd></li>
-        <li><span>Pause/Resume</span><kbd>Space</kbd></li>
+        <li><span>Start or stop</span><kbd id="toggle-shortcut">Ctrl+Shift+Q</kbd></li>
+        <li><span>Pause or resume</span><kbd>Space</kbd></li>
+        <li><span>Adjust speed</span><span><kbd>↑</kbd> <kbd>↓</kbd></span></li>
+        <li><span>Jump through text</span><span><kbd>←</kbd> <kbd>→</kbd></span></li>
         <li><span>Close</span><kbd>Esc</kbd></li>
-        <li><span>Speed up/down</span><kbd>↑</kbd> / <kbd>↓</kbd></li>
-        <li><span>Jump forward/back</span><kbd>→</kbd> / <kbd>←</kbd></li>
       </ul>
-      <div class="actions">
-        <button id="open-shortcuts" class="ghost">Edit shortcuts</button>
-      </div>
-      <p class="hint">Opens Chrome’s shortcut settings page.</p>
-    </section>
+      <button id="open-shortcuts" class="secondary" type="button">Edit Chrome shortcut</button>
+    </details>
 
+    <script src="settings.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>
