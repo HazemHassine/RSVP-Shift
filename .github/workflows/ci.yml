@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate:
+    name: Validate & Package Extension
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run Syntax & Integrity Validation
+        run: node .github/scripts/validate.js
+
+      - name: Package Extension (.zip)
+        if: matrix.node-version == '20.x'
+        run: |
+          mkdir -p dist
+          zip -r dist/fast-reader-extension.zip . \
+            -x "*.git*" \
+            -x ".github/*" \
+            -x "screenshots/*" \
+            -x "dist/*"
+
+      - name: Upload Extension Artifact
+        if: matrix.node-version == '20.x'
+        uses: actions/upload-artifact@v4
+        with:
+          name: fast-reader-extension
+          path: dist/fast-reader-extension.zip
+          retention-days: 14
