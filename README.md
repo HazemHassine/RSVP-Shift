@@ -10,11 +10,8 @@ RSVP Shift is a focused Chrome speed reader. Highlight text on almost any webpag
 ![RSVP Shift distraction-free focus mode](screenshots/01_focus_mode.png)
 *Distraction-free RSVP reading with a fixed red focus letter.*
 
-![RSVP Shift paused controls](screenshots/02_paused_controls.png)
-*Pause, scrub through the selection, adjust speed, or jump between words without losing your place.*
-
 ![RSVP Shift keyboard shortcuts](screenshots/03_keyboard_help.png)
-*Keyboard-first controls stay available when needed and out of the way while reading.*
+*Keyboard-first controls stay available when needed and out of the way while reading.Pause, scrub through the selection, adjust speed, or jump between words without losing your place*
 
 
 ## Install in Chrome
